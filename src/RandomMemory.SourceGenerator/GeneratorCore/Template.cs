@@ -2,7 +2,16 @@
 
 namespace RandomMemory.GeneratorCore
 {
-    public partial class DatabaseBuilderTemplate
+    public interface ITemplate
+    {
+        public string Namespace { get; set; }
+        public string Using { get; set; }
+        public string PrefixClassName { get; set; }
+        public GenerationContext[] GenerationContexts { get; set; }
+        public string ClassName { get; }
+    }
+
+    public partial class DatabaseBuilderTemplate : ITemplate
     {
         public string Namespace { get; set; }
         public string Using { get; set; }
@@ -12,7 +21,7 @@ namespace RandomMemory.GeneratorCore
         public string ClassName => PrefixClassName + "DatabaseBuilder";
     }
 
-    public partial class MemoryDatabaseTemplate
+    public partial class MemoryDatabaseTemplate : ITemplate
     {
         public string Namespace { get; set; }
         public string Using { get; set; }
@@ -21,7 +30,7 @@ namespace RandomMemory.GeneratorCore
         public string ClassName => PrefixClassName + "MemoryDatabase";
     }
 
-    public partial class MetaMemoryDatabaseTemplate
+    public partial class MetaMemoryDatabaseTemplate : ITemplate
     {
         public string Namespace { get; set; }
         public string Using { get; set; }
@@ -30,22 +39,31 @@ namespace RandomMemory.GeneratorCore
         public string ClassName => PrefixClassName + "MetaMemoryDatabase";
     }
 
-    public partial class ImmutableBuilderTemplate
+    public partial class TransactionTemplate : ITemplate
     {
         public string Namespace { get; set; }
         public string Using { get; set; }
         public string PrefixClassName { get; set; }
         public GenerationContext[] GenerationContexts { get; set; }
-        public string ClassName => PrefixClassName + "ImmutableBuilder";
+        public string ClassName => PrefixClassName + "Transaction";
     }
 
-    public partial class MessagePackResolverTemplate
+    public partial class MessagePackResolverTemplate : ITemplate
     {
         public string Namespace { get; set; }
         public string Using { get; set; }
         public string PrefixClassName { get; set; }
         public GenerationContext[] GenerationContexts { get; set; }
         public string ClassName => PrefixClassName + "RandomMemoryResolver";
+    }
+
+    public partial class DatabaseSessionTemplate : ITemplate
+    {
+        public string Namespace { get; set; }
+        public string Using { get; set; }
+        public string PrefixClassName { get; set; }
+        public GenerationContext[] GenerationContexts { get; set; }
+        public string ClassName => PrefixClassName + "DatabaseSession";
     }
 
     public partial class TableTemplate

@@ -27,9 +27,9 @@
 			<Generator>TextTemplatingFilePreprocessor</Generator>
 			<LastGenOutput>DatabaseBuilderTemplate.cs</LastGenOutput>
 		</None>
-		<None Update="GeneratorCore\ImmutableBuilderTemplate.tt">
+		<None Update="GeneratorCore\TransactionTemplate.tt">
 			<Generator>TextTemplatingFilePreprocessor</Generator>
-			<LastGenOutput>ImmutableBuilderTemplate.cs</LastGenOutput>
+			<LastGenOutput>TransactionTemplate.cs</LastGenOutput>
 		</None>
 		<None Update="GeneratorCore\MemoryDatabaseTemplate.tt">
 			<Generator>TextTemplatingFilePreprocessor</Generator>
@@ -43,6 +43,10 @@
 			<Generator>TextTemplatingFilePreprocessor</Generator>
 			<LastGenOutput>TableTemplate.cs</LastGenOutput>
 		</None>
+    <None Update="GeneratorCore\DatabaseSessionTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>DatabaseSessionTemplate.cs</LastGenOutput>
+    </None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -54,11 +58,6 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>DatabaseBuilderTemplate.tt</DependentUpon>
-		</Compile>
-		<Compile Update="GeneratorCore\ImmutableBuilderTemplate.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>ImmutableBuilderTemplate.tt</DependentUpon>
 		</Compile>
 		<Compile Update="GeneratorCore\MemoryDatabaseTemplate.cs">
 			<DesignTime>True</DesignTime>
@@ -74,6 +73,16 @@
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>TableTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\DatabaseSessionTemplate.cs">
+		  <AutoGen>True</AutoGen>
+		  <DesignTime>True</DesignTime>
+		  <DependentUpon>DatabaseSessionTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\TransactionTemplate.cs">
+		  <AutoGen>True</AutoGen>
+		  <DesignTime>True</DesignTime>
+		  <DependentUpon>TransactionTemplate.tt</DependentUpon>
 		</Compile>
 	</ItemGroup>
 </Project>

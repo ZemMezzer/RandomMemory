@@ -18,7 +18,7 @@ namespace RandomMemory.GeneratorCore
     /// Class to produce the template output
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class MemoryDatabaseTemplate : MemoryDatabaseTemplateBase
+    public partial class TransactionTemplate : TransactionTemplateBase
     {
         /// <summary>
         /// Create the template output
@@ -43,255 +43,348 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write(" : MemoryDatabaseBase\r\n   {\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("        public ");
+            this.Write(" : TransactionBase\r\n   {\r\n        private ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             
             #line default
             #line hidden
-            this.Write("Table ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Table { get; private set; } = default!;\r\n");
- } 
-            this.Write("\r\n        public ");
+            this.Write("MemoryDatabase _database;\r\n\r\n        public ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
             
             #line default
             #line hidden
-            this.Write("(\r\n");
+            this.Write("(");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
+            
+            #line default
+            #line hidden
+            this.Write("MemoryDatabase database)\r\n        {\r\n            _database = database;\r\n        }\r\n\r\n        public ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
+            
+            #line default
+            #line hidden
+            this.Write("MemoryDatabase Commit()\r\n        {\r\n            return _database;\r\n        }\r\n\r\n");
  for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; 
-            this.Write("            ");
+            this.Write("        public void ReplaceAll(System.Collections.Generic.IList<");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table ");
+            this.Write("> data)\r\n        {\r\n            var newData = CloneAndSortBy(data, x => ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var table = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table");
+            this.Write("Table(newData);\r\n            _database = new ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture((i == GenerationContexts.Length - 1) ? "" : ","));
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
+            
+            #line default
+            #line hidden
+            this.Write("MemoryDatabase(\r\n");
+ for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; 
+            this.Write("                ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((i == j) ? "table" : "_database." + item2.ClassName + "Table"));
+            
+            #line default
+            #line hidden
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((j == GenerationContexts.Length - 1) ? "" : ","));
             
             #line default
             #line hidden
             this.Write("\r\n");
  } 
-            this.Write("        )\r\n        {\r\n");
- for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; 
-            this.Write("            this.");
+            this.Write("            );\r\n        }\r\n\r\n");
+ if(!item.PrimaryKey.IsNonUnique) { 
+            this.Write("        public void Remove");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table = ");
+            this.Write("(");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildTypeName()));
+            
+            #line default
+            #line hidden
+            this.Write("[] keys)\r\n        {\r\n            var data = RemoveCore(_database.");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table;\r\n");
- } 
-            this.Write("        }\r\n\r\n        public ");
+            this.Write("Table.GetRawDataUnsafe(), keys, x => ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("(byte[] databaseBinary, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)\r\n            : base(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism)\r\n        {\r\n        }\r\n\r\n        protected override void Init(Dictionary<string, (int offset, int count)> header, System.ReadOnlyMemory<byte> databaseBinary, MessagePack.MessagePackSerializerOptions options, int maxDegreeOfParallelism)\r\n        {\r\n            if (maxDegreeOfParallelism == 1)\r\n            {\r\n                InitSequential(header, databaseBinary, options, maxDegreeOfParallelism);\r\n            }\r\n            else\r\n            {\r\n                InitParallel(header, databaseBinary, options, maxDegreeOfParallelism);\r\n            }\r\n        }\r\n\r\n        void InitSequential(Dictionary<string, (int offset, int count)> header, System.ReadOnlyMemory<byte> databaseBinary, MessagePack.MessagePackSerializerOptions options, int maxDegreeOfParallelism)\r\n        {\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("            this.");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Table = ExtractTableData<");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
             
             #line default
             #line hidden
             this.Write(", ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
             
             #line default
             #line hidden
-            this.Write("Table>(header, databaseBinary, options, xs => new ");
+            this.Write(");\r\n            var newData = CloneAndSortBy(data, x => ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Table(xs));\r\n");
- } 
-            this.Write("        }\r\n\r\n        void InitParallel(Dictionary<string, (int offset, int count)> header, System.ReadOnlyMemory<byte> databaseBinary, MessagePack.MessagePackSerializerOptions options, int maxDegreeOfParallelism)\r\n        {\r\n            var extracts = new Action[]\r\n            {\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("                () => this.");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Table = ExtractTableData<");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
             
             #line default
             #line hidden
             this.Write(", ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
             
             #line default
             #line hidden
-            this.Write("Table>(header, databaseBinary, options, xs => new ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Table(xs)),\r\n");
- } 
-            this.Write("            };\r\n\r\n            System.Threading.Tasks.Parallel.Invoke(new System.Threading.Tasks.ParallelOptions\r\n            {\r\n                MaxDegreeOfParallelism = maxDegreeOfParallelism\r\n            }, extracts);\r\n        }\r\n\r\n        public ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
-            
-            #line default
-            #line hidden
-            this.Write("DatabaseBuilder ToDatabaseBuilder()\r\n        {\r\n            var builder = new ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
-            
-            #line default
-            #line hidden
-            this.Write("DatabaseBuilder();\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("            builder.Append(this.");
+            this.Write(");\r\n            var table = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table.GetRawDataUnsafe());\r\n");
- } 
-            this.Write("            return builder;\r\n        }\r\n\r\n        public ");
+            this.Write("Table(newData);\r\n            _database = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             
             #line default
             #line hidden
-            this.Write("DatabaseBuilder ToDatabaseBuilder(MessagePack.IFormatterResolver resolver)\r\n        {\r\n            var builder = new ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
-            
-            #line default
-            #line hidden
-            this.Write("DatabaseBuilder(resolver);\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("            builder.Append(this.");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Table.GetRawDataUnsafe());\r\n");
- } 
-            this.Write("            return builder;\r\n        }\r\n\r\n#if !DISABLE_RANDOMMEMORY_VALIDATOR\r\n\r\n        public ValidateResult Validate()\r\n        {\r\n            var result = new ValidateResult();\r\n            var database = new ValidationDatabase(new object[]\r\n            {\r\n");
- foreach(var item in GenerationContexts) { 
+            this.Write("MemoryDatabase(\r\n");
+ for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; 
             this.Write("                ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            this.Write(this.ToStringHelper.ToStringWithCulture((i == j) ? "table" : "_database." + item2.ClassName + "Table"));
             
             #line default
             #line hidden
-            this.Write("Table,\r\n");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((j == GenerationContexts.Length - 1) ? "" : ","));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n");
  } 
-            this.Write("            });\r\n\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("            ((ITableUniqueValidate)");
+            this.Write("            );\r\n        }\r\n\r\n        public void Remove");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table).ValidateUnique(result);\r\n            ValidateTable(");
+            this.Write("(");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildTypeName()));
+            
+            #line default
+            #line hidden
+            this.Write(" key)\r\n        {\r\n            var data = RemoveCore(_database.");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table.All, database, \"");
+            this.Write("Table.GetRawDataUnsafe(), key, x => ");
             
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildPropertyTupleName()));
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
             
             #line default
             #line hidden
-            this.Write("\", ");
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var newData = CloneAndSortBy(data, x => ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var table = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table.PrimaryKeySelector, result);\r\n");
+            this.Write("Table(newData);\r\n            _database = new ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
+            
+            #line default
+            #line hidden
+            this.Write("MemoryDatabase(\r\n");
+ for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; 
+            this.Write("                ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((i == j) ? "table" : "_database." + item2.ClassName + "Table"));
+            
+            #line default
+            #line hidden
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((j == GenerationContexts.Length - 1) ? "" : ","));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n");
  } 
-            this.Write("\r\n            return result;\r\n        }\r\n\r\n#endif\r\n\r\n        static RandomMemory.Meta.MetaDatabase? metaTable;\r\n\r\n        public static object? GetTable(");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(ClassName));
-            
-            #line default
-            #line hidden
-            this.Write(" db, string tableName)\r\n        {\r\n            switch (tableName)\r\n            {\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("                case \"");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.MemoryTableName));
-            
-            #line default
-            #line hidden
-            this.Write("\":\r\n                    return db.");
+            this.Write("            );\r\n        }\r\n\r\n        public void Diff(");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table;\r\n");
- } 
-            this.Write("                default:\r\n                    return null;\r\n            }\r\n        }\r\n\r\n#if !DISABLE_RANDOMMEMORY_METADATABASE\r\n\r\n        public static RandomMemory.Meta.MetaDatabase GetMetaDatabase()\r\n        {\r\n            if (metaTable != null) return metaTable;\r\n\r\n            var dict = new Dictionary<string, RandomMemory.Meta.MetaTable>();\r\n");
- foreach(var item in GenerationContexts) { 
-            this.Write("            dict.Add(\"");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(item.MemoryTableName));
-            
-            #line default
-            #line hidden
-            this.Write("\", ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(Namespace));
-            
-            #line default
-            #line hidden
-            this.Write(".Tables.");
+            this.Write("[] addOrReplaceData)\r\n        {\r\n            var data = DiffCore(_database.");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
             
             #line default
             #line hidden
-            this.Write("Table.CreateMetaTable());\r\n");
+            this.Write("Table.GetRawDataUnsafe(), addOrReplaceData, x => ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var newData = CloneAndSortBy(data, x => ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var table = new ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            
+            #line default
+            #line hidden
+            this.Write("Table(newData);\r\n            _database = new ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
+            
+            #line default
+            #line hidden
+            this.Write("MemoryDatabase(\r\n");
+ for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; 
+            this.Write("                ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((i == j) ? "table" : "_database." + item2.ClassName + "Table"));
+            
+            #line default
+            #line hidden
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((j == GenerationContexts.Length - 1) ? "" : ","));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n");
  } 
-            this.Write("\r\n            metaTable = new RandomMemory.Meta.MetaDatabase(dict);\r\n            return metaTable;\r\n        }\r\n\r\n#endif\r\n    }\r\n}\r\n");
+            this.Write("            );\r\n        }\r\n\r\n        public void Diff(");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            
+            #line default
+            #line hidden
+            this.Write(" addOrReplaceData)\r\n        {\r\n            var data = DiffCore(_database.");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            
+            #line default
+            #line hidden
+            this.Write("Table.GetRawDataUnsafe(), addOrReplaceData, x => ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var newData = CloneAndSortBy(data, x => ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildKeyAccessor("x")));
+            
+            #line default
+            #line hidden
+            this.Write(", ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.PrimaryKey.BuildComparer()));
+            
+            #line default
+            #line hidden
+            this.Write(");\r\n            var table = new ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.ClassName));
+            
+            #line default
+            #line hidden
+            this.Write("Table(newData);\r\n            _database = new ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
+            
+            #line default
+            #line hidden
+            this.Write("MemoryDatabase(\r\n");
+ for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; 
+            this.Write("                ");
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((i == j) ? "table" : "_database." + item2.ClassName + "Table"));
+            
+            #line default
+            #line hidden
+            
+            this.Write(this.ToStringHelper.ToStringWithCulture((j == GenerationContexts.Length - 1) ? "" : ","));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n");
+ } 
+            this.Write("            );\r\n        }\r\n");
+ } 
+            this.Write("\r\n");
+ } 
+            this.Write("    }\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -300,7 +393,7 @@ namespace RandomMemory.GeneratorCore
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class MemoryDatabaseTemplateBase
+    public class TransactionTemplateBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

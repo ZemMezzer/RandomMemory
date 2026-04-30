@@ -57,7 +57,7 @@ namespace Benchmark
     [Config(typeof(BenchmarkConfig))]
     public class SimpleRun
     {
-        MemoryDatabase db;
+        DatabaseSession db;
         SQLite_Test sqliteMemory;
         SQLite_Test sqliteFile;
 
@@ -73,10 +73,13 @@ namespace Benchmark
 
         const int QueryId = 741;
 
+        int[] ids;
+
         public SimpleRun()
         {
             var bin = new DatabaseBuilder().Append(MakeDoc(5000)).Build();
-            db = new MemoryDatabase(bin);
+            db = new DatabaseSession(bin);
+            ids = db.Tables.TestDocTable.All.Select(t => t.id).ToArray();
 
             sqliteMemory = new SQLite_Test(5000, null, false, true);
             sqliteMemory.Prepare(); sqliteMemory.Insert(); sqliteMemory.CreateIndex();
@@ -135,9 +138,33 @@ namespace Benchmark
         }
 
         [Benchmark(Baseline = true)]
-        public TestDoc MasterMemoryQuery()
+        public TestDoc RandomMemoryQuery()
         {
-            return db.TestDocTable.FindByid(QueryId);
+            return db.Tables.TestDocTable.FindByid(QueryId);
+        }
+
+        [Benchmark]
+        public void RandomMemoryManyRequest()
+        {
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                var transaction = db.BeginTransaction();
+                transaction.Diff(new TestDoc(id, "some name", "lorem"));
+                transaction.Commit();
+            }
+        }
+
+        [Benchmark]
+        public void RandomMemorySingleRequest()
+        {
+            var transaction = db.BeginTransaction();
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                transaction.Diff(new TestDoc(id, "some name", "lorem"));
+            }
+            transaction.Commit();
         }
 
         [Benchmark]

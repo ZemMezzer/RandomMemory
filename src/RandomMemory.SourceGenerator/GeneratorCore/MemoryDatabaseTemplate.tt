@@ -67,11 +67,6 @@ namespace <#= Namespace #>
             }, extracts);
         }
 
-        public <#= PrefixClassName #>ImmutableBuilder ToImmutableBuilder()
-        {
-            return new <#= PrefixClassName #>ImmutableBuilder(this);
-        }
-
         public <#= PrefixClassName #>DatabaseBuilder ToDatabaseBuilder()
         {
             var builder = new <#= PrefixClassName #>DatabaseBuilder();

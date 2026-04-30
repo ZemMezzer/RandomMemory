@@ -4,10 +4,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RandomMemory.GeneratorCore;
 using RandomMemory.Utility;
 using DatabaseBuilderTemplate = RandomMemory.GeneratorCore.DatabaseBuilderTemplate;
-using ImmutableBuilderTemplate = RandomMemory.GeneratorCore.ImmutableBuilderTemplate;
 using MemoryDatabaseTemplate = RandomMemory.GeneratorCore.MemoryDatabaseTemplate;
 using MessagePackResolverTemplate = RandomMemory.GeneratorCore.MessagePackResolverTemplate;
 using TableTemplate = RandomMemory.GeneratorCore.TableTemplate;
+using DatabaseSessionTemplate = RandomMemory.GeneratorCore.DatabaseSessionTemplate;
 
 namespace RandomMemory.SourceGenerator;
 
@@ -82,23 +82,21 @@ public partial class RandomMemoryGenerator : IIncrementalGenerator
 
         var usingNamespace = generatorOptions.Namespace ?? defaultNamespace ?? "RandomMemory";
         var prefixClassName = generatorOptions.PrefixClassName ?? "";
-        var throwIfKeyNotFound = !generatorOptions.IsReturnNullIfKeyNotFound; // becareful, reverse!
+        var throwIfKeyNotFound = !generatorOptions.IsReturnNullIfKeyNotFound;
 
         var usingStrings = string.Join(Environment.NewLine, memoryTables.SelectMany(x => x.UsingStrings).Distinct().OrderBy(x => x, StringComparer.Ordinal));
 
-        var builderTemplate = new DatabaseBuilderTemplate();
-        var databaseTemplate = new MemoryDatabaseTemplate();
-        var immutableBuilderTemplate = new ImmutableBuilderTemplate();
-        var resolverTemplate = new MessagePackResolverTemplate();
-        builderTemplate.Namespace = databaseTemplate.Namespace = immutableBuilderTemplate.Namespace = resolverTemplate.Namespace = usingNamespace;
-        builderTemplate.PrefixClassName = databaseTemplate.PrefixClassName = immutableBuilderTemplate.PrefixClassName = resolverTemplate.PrefixClassName = prefixClassName;
-        builderTemplate.Using = databaseTemplate.Using = immutableBuilderTemplate.Using = resolverTemplate.Using = (usingStrings + Environment.NewLine + ("using " + usingNamespace + ".Tables;"));
-        builderTemplate.GenerationContexts = databaseTemplate.GenerationContexts = immutableBuilderTemplate.GenerationContexts = resolverTemplate.GenerationContexts = memoryTables.ToArray();
+        var builderTemplate = CreateTemplate<DatabaseBuilderTemplate>(usingNamespace, prefixClassName, usingStrings, memoryTables);
+        var databaseTemplate = CreateTemplate<MemoryDatabaseTemplate>(usingNamespace, prefixClassName, usingStrings, memoryTables);
+        var transactionTemplate = CreateTemplate<TransactionTemplate>(usingNamespace, prefixClassName, usingStrings, memoryTables);
+        var resolverTemplate = CreateTemplate<MessagePackResolverTemplate>(usingNamespace, prefixClassName, usingStrings, memoryTables);
+        var databaseSessionTemplate = CreateTemplate<DatabaseSessionTemplate>(usingNamespace, prefixClassName, usingStrings, memoryTables);
 
         Log(AddSource(context, builderTemplate.ClassName, builderTemplate.TransformText()));
-        Log(AddSource(context, immutableBuilderTemplate.ClassName, immutableBuilderTemplate.TransformText()));
+        Log(AddSource(context, transactionTemplate.ClassName, transactionTemplate.TransformText()));
         Log(AddSource(context, databaseTemplate.ClassName, databaseTemplate.TransformText()));
         Log(AddSource(context, resolverTemplate.ClassName, resolverTemplate.TransformText()));
+        Log(AddSource(context, databaseSessionTemplate.ClassName, databaseSessionTemplate.TransformText()));
 
         foreach (var generationContext in memoryTables)
         {
@@ -112,6 +110,17 @@ public partial class RandomMemoryGenerator : IIncrementalGenerator
 
             Log(AddSource(context, generationContext.ClassName + "Table", template.TransformText()));
         }
+    }
+
+    private T CreateTemplate<T>(string usingNamespace, string prefixClassName, string usingStrings, EquatableArray<GenerationContext> generationContexts) where T : ITemplate, new()
+    {
+        return new T
+        {
+            Namespace = usingNamespace,
+            PrefixClassName = prefixClassName,
+            Using = (usingStrings + Environment.NewLine + ("using " + usingNamespace + ".Tables;")),
+            GenerationContexts = generationContexts.ToArray()
+        };
     }
 
     static void Log(string msg) => Trace.WriteLine(msg);

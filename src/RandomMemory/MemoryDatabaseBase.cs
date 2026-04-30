@@ -16,23 +16,38 @@ namespace RandomMemory
 
         }
 
-        public MemoryDatabaseBase(byte[] databaseBinary, bool internString = true, IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
+        public MemoryDatabaseBase(byte[]? databaseBinary = null, bool internString = true, IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
         {
             var reader = new MessagePackReader(databaseBinary);
             var formatter = new DictionaryFormatter<string, (int, int)>();
 
-            var header = formatter.Deserialize(ref reader, HeaderFormatterResolver.StandardOptions);
-            var resolver = formatterResolver ?? MessagePackSerializer.DefaultOptions.Resolver;
-            if (internString)
-            {
-                resolver = new InternStringResolver(resolver);
-            }
             if (maxDegreeOfParallelism < 1)
             {
                 maxDegreeOfParallelism = 1;
             }
 
-            Init(header!, databaseBinary.AsMemory((int)reader.Consumed), MessagePackSerializer.DefaultOptions.WithResolver(resolver).WithCompression(MessagePackCompression.Lz4Block), maxDegreeOfParallelism);
+            var resolver = formatterResolver ?? MessagePackSerializer.DefaultOptions.Resolver;
+            if (internString)
+            {
+                resolver = new InternStringResolver(resolver);
+            }
+
+            if (databaseBinary == null || databaseBinary.Length == 0)
+            {
+                Init(
+                    new Dictionary<string, (int offset, int count)>(),
+                    Array.Empty<byte>().AsMemory(),
+                    MessagePackSerializer.DefaultOptions.WithResolver(resolver).WithCompression(MessagePackCompression.Lz4Block),
+                    maxDegreeOfParallelism);
+                return;
+            }
+
+            var header = formatter.Deserialize(ref reader, HeaderFormatterResolver.StandardOptions);
+            Init(
+                header!,
+                databaseBinary.AsMemory((int)reader.Consumed),
+                MessagePackSerializer.DefaultOptions.WithResolver(resolver).WithCompression(MessagePackCompression.Lz4Block),
+                maxDegreeOfParallelism);
         }
 
         protected static TView ExtractTableData<T, TView>(Dictionary<string, (int offset, int count)> header, ReadOnlyMemory<byte> databaseBinary, MessagePackSerializerOptions options, Func<T[], TView> createView)
