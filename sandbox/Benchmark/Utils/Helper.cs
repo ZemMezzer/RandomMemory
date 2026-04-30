@@ -10,7 +10,7 @@ using RandomMemory;
 namespace TestPerfLiteDB
 {
     [MemoryTable("TestDoc"), MessagePackObject(true)]
-    public class TestDoc
+    public record struct TestDoc
     {
         [PrimaryKey]
         public int id { get; set; }

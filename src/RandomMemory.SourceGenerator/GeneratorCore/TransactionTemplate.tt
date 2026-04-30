@@ -8,82 +8,77 @@
 #nullable enable
 
 <#= Using #>
+using System.Linq;
 
 namespace <#= Namespace #>
 {
-   public sealed class <#= ClassName #> : TransactionBase
+
+   public interface ITransaction
+   {
+<# for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; #>
+        public void ReplaceAll(System.Collections.Generic.IList<<#= item.ClassName #>> data);
+<# if(!item.PrimaryKey.IsNonUnique) { #>
+        public void Remove<#= item.ClassName #>(<#= item.PrimaryKey.BuildTypeName() #>[] keys);
+        public void Remove<#= item.ClassName #>(<#= item.PrimaryKey.BuildTypeName() #> key);
+        public void Diff(<#= item.ClassName #>[] addOrReplaceData);
+        public void Diff(<#= item.ClassName #> addOrReplaceData);
+<# } #>
+
+<# } #>
+   }
+
+   public sealed class <#= ClassName #> : TransactionBase, ITransaction
    {
         private <#= PrefixClassName #>MemoryDatabase _database;
+<# foreach(var item in GenerationContexts) { #>
+        private List<<#= item.ClassName #>> _<#= item.ClassName #>RawTable { get; set; } = default!;
+<# } #>
 
         public <#= ClassName #>(<#= PrefixClassName #>MemoryDatabase database)
         {
             _database = database;
+
+<# foreach(var item in GenerationContexts) { #>
+            _<#= item.ClassName #>RawTable = _database.<#= item.ClassName #>Table.GetRawDataUnsafe().ToList();
+<# } #>
         }
 
         public <#= PrefixClassName #>MemoryDatabase Commit()
         {
+            _database = new <#= PrefixClassName #>MemoryDatabase(
+<# for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; #>
+                new <#= item.ClassName #>Table(_<#= item.ClassName #>RawTable.ToArray())<#= (i == GenerationContexts.Length - 1) ? "" : "," #>
+<# } #>
+            );
+
             return _database;
         }
 
 <# for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; #>
         public void ReplaceAll(System.Collections.Generic.IList<<#= item.ClassName #>> data)
         {
-            var newData = CloneAndSortBy(data, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var table = new <#= item.ClassName #>Table(newData);
-            _database = new <#= PrefixClassName #>MemoryDatabase(
-<# for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; #>
-                <#= (i == j) ? "table" : "_database." + item2.ClassName + "Table"  #><#= (j == GenerationContexts.Length - 1) ? "" : "," #>
-<# } #>
-            );
+            _<#= item.ClassName #>RawTable = CloneAndSortBy(data, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
         }
 
 <# if(!item.PrimaryKey.IsNonUnique) { #>
         public void Remove<#= item.ClassName #>(<#= item.PrimaryKey.BuildTypeName() #>[] keys)
         {
-            var data = RemoveCore(_database.<#= item.ClassName #>Table.GetRawDataUnsafe(), keys, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var newData = CloneAndSortBy(data, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var table = new <#= item.ClassName #>Table(newData);
-            _database = new <#= PrefixClassName #>MemoryDatabase(
-<# for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; #>
-                <#= (i == j) ? "table" : "_database." + item2.ClassName + "Table"  #><#= (j == GenerationContexts.Length - 1) ? "" : "," #>
-<# } #>
-            );
+            RemoveCore(_<#= item.ClassName #>RawTable, keys, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
         }
 
         public void Remove<#= item.ClassName #>(<#= item.PrimaryKey.BuildTypeName() #> key)
         {
-            var data = RemoveCore(_database.<#= item.ClassName #>Table.GetRawDataUnsafe(), key, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var newData = CloneAndSortBy(data, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var table = new <#= item.ClassName #>Table(newData);
-            _database = new <#= PrefixClassName #>MemoryDatabase(
-<# for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; #>
-                <#= (i == j) ? "table" : "_database." + item2.ClassName + "Table"  #><#= (j == GenerationContexts.Length - 1) ? "" : "," #>
-<# } #>
-            );
+            RemoveCore(_<#= item.ClassName #>RawTable, key, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
         }
 
         public void Diff(<#= item.ClassName #>[] addOrReplaceData)
         {
-            var data = DiffCore(_database.<#= item.ClassName #>Table.GetRawDataUnsafe(), addOrReplaceData, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var newData = CloneAndSortBy(data, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var table = new <#= item.ClassName #>Table(newData);
-            _database = new <#= PrefixClassName #>MemoryDatabase(
-<# for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; #>
-                <#= (i == j) ? "table" : "_database." + item2.ClassName + "Table"  #><#= (j == GenerationContexts.Length - 1) ? "" : "," #>
-<# } #>
-            );
+            DiffCore(_<#= item.ClassName #>RawTable, addOrReplaceData, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
         }
 
         public void Diff(<#= item.ClassName #> addOrReplaceData)
         {
-            var data = DiffCore(_database.<#= item.ClassName #>Table.GetRawDataUnsafe(), addOrReplaceData, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var newData = CloneAndSortBy(data, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
-            var table = new <#= item.ClassName #>Table(newData);
-            _database = new <#= PrefixClassName #>MemoryDatabase(
-<# for(var j = 0; j < GenerationContexts.Length; j++) { var item2 = GenerationContexts[j]; #>
-                <#= (i == j) ? "table" : "_database." + item2.ClassName + "Table"  #><#= (j == GenerationContexts.Length - 1) ? "" : "," #>
-<# } #>
-            );
+            DiffCore(_<#= item.ClassName #>RawTable, addOrReplaceData, x => <#= item.PrimaryKey.BuildKeyAccessor("x") #>, <#= item.PrimaryKey.BuildComparer() #>);
         }
 <# } #>
 

@@ -73,13 +73,7 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write("MemoryDatabase(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);\r\n        }\r\n\r\n        public ");
-            
-            this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
-            
-            #line default
-            #line hidden
-            this.Write("Transaction BeginTransaction()\r\n        {\r\n            if(IsTransactionStarted)\r\n              throw new System.InvalidOperationException(\"Transaction already started!\");\r\n\r\n            _transaction = new ");
+            this.Write("MemoryDatabase(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);\r\n        }\r\n\r\n        public ITransaction BeginTransaction()\r\n        {\r\n            if(IsTransactionStarted)\r\n              throw new System.InvalidOperationException(\"Transaction already started!\");\r\n\r\n            _transaction = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             

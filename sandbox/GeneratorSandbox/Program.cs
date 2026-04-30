@@ -39,6 +39,15 @@ RangeView<Person> age1 = database.Tables.PersonTable.FindClosestByAge(31);
 // Get range(min-max inclusive).
 RangeView<Person> age2 = database.Tables.PersonTable.FindRangeByAge(20, 29);
 
+var transaction = database.BeginTransaction();
+transaction.Diff(person with {Age = 28});
+transaction.Diff(person with {Age = 29});
+transaction.Diff(person with {Age = 30});
+transaction.RemovePerson(0);
+database.Commit();
+
+Console.WriteLine(database.Tables.PersonTable.FindByPersonId(5).Age);
+
 public enum Gender
 {
     Male, Female, Unknown
@@ -65,11 +74,4 @@ public record Person
     public required Gender Gender { get; init; }
 
     public required string Name { get; init; }
-}
-
-[MemoryTable("animal"), MessagePackObject(true)]
-public record Animal
-{
-    [PrimaryKey]
-    public required string AnimalName { get; init; }
 }

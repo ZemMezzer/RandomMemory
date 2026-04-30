@@ -45,7 +45,7 @@ namespace Benchmark
             var baseConfig = Job.ShortRun.WithIterationCount(1).WithWarmupCount(1);
 
             // Add(baseConfig.With(Runtime.Clr).With(Jit.RyuJit).With(Platform.X64));
-            Add(baseConfig.With(Runtime.Core).With(Jit.RyuJit).With(Platform.X64));
+            Add(baseConfig.With(CoreRuntime.Core60).With(Jit.RyuJit).With(Platform.X64));
             // Add(baseConfig.With(InProcessEmitToolchain.Instance));
 
             Add(MarkdownExporter.GitHub);
@@ -73,13 +73,10 @@ namespace Benchmark
 
         const int QueryId = 741;
 
-        int[] ids;
-
         public SimpleRun()
         {
             var bin = new DatabaseBuilder().Append(MakeDoc(5000)).Build();
             db = new DatabaseSession(bin);
-            ids = db.Tables.TestDocTable.All.Select(t => t.id).ToArray();
 
             sqliteMemory = new SQLite_Test(5000, null, false, true);
             sqliteMemory.Prepare(); sqliteMemory.Insert(); sqliteMemory.CreateIndex();
@@ -141,30 +138,6 @@ namespace Benchmark
         public TestDoc RandomMemoryQuery()
         {
             return db.Tables.TestDocTable.FindByid(QueryId);
-        }
-
-        [Benchmark]
-        public void RandomMemoryManyRequest()
-        {
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                var transaction = db.BeginTransaction();
-                transaction.Diff(new TestDoc(id, "some name", "lorem"));
-                transaction.Commit();
-            }
-        }
-
-        [Benchmark]
-        public void RandomMemorySingleRequest()
-        {
-            var transaction = db.BeginTransaction();
-            for (var i = 0; i < ids.Length; i++)
-            {
-                var id = ids[i];
-                transaction.Diff(new TestDoc(id, "some name", "lorem"));
-            }
-            transaction.Commit();
         }
 
         [Benchmark]

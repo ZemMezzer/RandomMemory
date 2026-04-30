@@ -24,7 +24,7 @@ namespace <#= Namespace #>
             _database = new <#= PrefixClassName #>MemoryDatabase(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);
         }
 
-        public <#= PrefixClassName #>Transaction BeginTransaction()
+        public ITransaction BeginTransaction()
         {
             if(IsTransactionStarted)
               throw new System.InvalidOperationException("Transaction already started!");
