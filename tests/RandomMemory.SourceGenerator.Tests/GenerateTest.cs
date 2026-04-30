@@ -1,0 +1,31 @@
+﻿
+namespace RandomMemory.SourceGenerator.Tests;
+
+public class GenerateTest(ITestOutputHelper outputHelper) : TestBase(outputHelper)
+{
+    [Fact]
+    public void GenerateClass()
+    {
+        Helper.Ok("""
+[MemoryTable("item")]
+public class Item
+{
+    [PrimaryKey]
+    public int ItemId { get; set; }
+}
+""");
+    }
+
+    [Fact]
+    public void GenerateRecord()
+    {
+        Helper.Ok("""
+[MemoryTable("item")]
+public record Item
+{
+    [PrimaryKey]
+    public int ItemId { get; set; }
+}
+""");
+    }
+}
