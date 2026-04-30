@@ -2,20 +2,19 @@
 #pragma warning disable CS8602
 #pragma warning disable CS8603
 
-using MasterMemory;
 using MessagePack;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using RandomMemory;
 
 
-[assembly: MasterMemoryGeneratorOptions(
+[assembly: RandomMemoryGeneratorOptions(
     Namespace = "ConsoleApp" // ,
     // IsReturnNullIfKeyNotFound = true,
     // PrefixClassName = "Foo"

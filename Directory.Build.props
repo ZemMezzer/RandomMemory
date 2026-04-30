@@ -8,9 +8,9 @@
     <PackageVersion>$(Version)</PackageVersion>
     <Company>Cysharp</Company>
     <Authors>Cysharp</Authors>
-    <Copyright>© Cysharp, Inc.</Copyright>
-    <PackageTags>database, embedded, inmemory, unity</PackageTags>
-    <PackageProjectUrl>https://github.com/Cysharp/MasterMemory</PackageProjectUrl>
+    <Copyright>© Zem © Cysharp, Inc.</Copyright>
+    <PackageTags>database, embedded, inmemory</PackageTags>
+    <PackageProjectUrl>https://github.com/ZemMezzer/RandomMemory</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

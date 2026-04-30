@@ -14,12 +14,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\MasterMemory.Annotations\MasterMemory.Annotations.csproj" />
-		<ProjectReference Include="..\..\src\MasterMemory\MasterMemory.csproj" />
-		<ProjectReference Include="..\..\src\MasterMemory.SourceGenerator\MasterMemory.SourceGenerator.csproj">
-			<OutputItemType>Analyzer</OutputItemType>
-			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-		</ProjectReference>
+		<ProjectReference Include="..\..\src\RandomMemory\RandomMemory.csproj" />
+    <ProjectReference Include="..\..\src\RandomMemory.SourceGenerator\RandomMemory.SourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>

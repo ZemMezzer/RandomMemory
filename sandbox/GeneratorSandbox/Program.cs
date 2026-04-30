@@ -1,9 +1,8 @@
-﻿using MasterMemory;
-using MessagePack;
+﻿using MessagePack;
 using GeneratorSandbox;
-using System.Runtime.CompilerServices;
+using RandomMemory;
 
-//[assembly: MasterMemoryGeneratorOptions(
+//[assembly: RandomMemoryGeneratorOptions(
 //    Namespace = "Z",
 //    IsReturnNullIfKeyNotFound = true,
 //    PrefixClassName = "")]
