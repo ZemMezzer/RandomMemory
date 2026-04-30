@@ -2,18 +2,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using MessagePack;
 using LiteDB;
-using MasterMemory;
+using RandomMemory;
 
 namespace TestPerfLiteDB
 {
     [MemoryTable("TestDoc"), MessagePackObject(true)]
-    public class TestDoc
+    public record struct TestDoc
     {
         [PrimaryKey]
         public int id { get; set; }

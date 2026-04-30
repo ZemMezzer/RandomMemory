@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+		<PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
 		<PackageReference Include="EnyimMemcachedCore" Version="2.2.4" />
 		<PackageReference Include="FASTER" Version="2019.4.24.4" />
 		<PackageReference Include="LiteDB" Version="4.1.4" />
@@ -17,12 +17,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\MasterMemory.Annotations\MasterMemory.Annotations.csproj" />
-		<ProjectReference Include="..\..\src\MasterMemory\MasterMemory.csproj" />
-		<ProjectReference Include="..\..\src\MasterMemory.SourceGenerator\MasterMemory.SourceGenerator.csproj">
-			<OutputItemType>Analyzer</OutputItemType>
-			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-		</ProjectReference>
+    <ProjectReference Include="..\..\src\RandomMemory\RandomMemory.csproj" />
+    <ProjectReference Include="..\..\src\RandomMemory.SourceGenerator\RandomMemory.SourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>

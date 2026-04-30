@@ -1,9 +1,8 @@
-﻿using MasterMemory;
-using MessagePack;
+﻿using MessagePack;
 using GeneratorSandbox;
-using System.Runtime.CompilerServices;
+using RandomMemory;
 
-//[assembly: MasterMemoryGeneratorOptions(
+//[assembly: RandomMemoryGeneratorOptions(
 //    Namespace = "Z",
 //    IsReturnNullIfKeyNotFound = true,
 //    PrefixClassName = "")]
@@ -25,23 +24,29 @@ builder.Append(new Person[]
 });
 
 // build database binary(you can also use `WriteToStream` for save to file).
-byte[] data = builder.Build();
-
-
-var db = new MemoryDatabase(data);
+var data = builder.Build();
+var database = new DatabaseSession(data);
 
 // .PersonTable.FindByPersonId is fully typed by code-generation.
-Person person = db.PersonTable.FindByPersonId(5);
+Person person = database.Tables.PersonTable.FindByPersonId(5);
 
 // Multiple key is also typed(***And * **), Return value is multiple if key is marked with `NonUnique`.
-RangeView<Person> result = db.PersonTable.FindByGenderAndAge((Gender.Female, 23));
+RangeView<Person> result = database.Tables.PersonTable.FindByGenderAndAge((Gender.Female, 23));
 
 // Get nearest value(choose lower(default) or higher).
-RangeView<Person> age1 = db.PersonTable.FindClosestByAge(31);
+RangeView<Person> age1 = database.Tables.PersonTable.FindClosestByAge(31);
 
 // Get range(min-max inclusive).
-RangeView<Person> age2 = db.PersonTable.FindRangeByAge(20, 29);
+RangeView<Person> age2 = database.Tables.PersonTable.FindRangeByAge(20, 29);
 
+var transaction = database.BeginTransaction();
+transaction.Diff(person with {Age = 28});
+transaction.Diff(person with {Age = 29});
+transaction.Diff(person with {Age = 30});
+transaction.RemovePerson(0);
+database.Commit();
+
+Console.WriteLine(database.Tables.PersonTable.FindByPersonId(5).Age);
 
 public enum Gender
 {

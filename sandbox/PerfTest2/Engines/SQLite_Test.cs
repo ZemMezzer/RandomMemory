@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestPerfLiteDB
 {
@@ -23,7 +18,7 @@ namespace TestPerfLiteDB
         {
             _count = count;
             _filename = "sqlite-" + Guid.NewGuid().ToString("n") + ".db";
-            
+
             if (memory)
             {
                 var cs = "Data Source=:memory:;New=True;";

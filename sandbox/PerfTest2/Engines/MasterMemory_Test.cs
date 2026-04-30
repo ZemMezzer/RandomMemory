@@ -1,11 +1,9 @@
 ﻿#pragma warning disable
-using MasterMemory;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PerfTest2;
 
 namespace TestPerfLiteDB
 {
@@ -14,7 +12,7 @@ namespace TestPerfLiteDB
         private string _filename;
         private int _count;
 
-        MemoryDatabase database;
+        DatabaseSession _session;
 
         public int Count { get { return _count; } }
         public int FileLength { get { return (int)new FileInfo(_filename).Length; } }
@@ -43,11 +41,12 @@ namespace TestPerfLiteDB
 
         public void Insert()
         {
-            var builder = new DatabaseBuilder();
-            builder.Append(MakeDoc());
-            var saved = builder.Build();
-            File.WriteAllBytes(_filename, saved);
-            database = new MemoryDatabase(saved);
+            _session = new DatabaseSession();
+            var transaction = _session.BeginTransaction();
+            transaction.Diff(MakeDoc().ToArray());
+            _session.Commit();
+            var bytes = _session.Serialize();
+            File.WriteAllBytes(_filename, bytes);
         }
 
         public void Bulk()
@@ -75,7 +74,7 @@ namespace TestPerfLiteDB
             for (var i = 0; i < _count; i++)
             {
                 //TestDoc d;
-                database.TestDocTable.FindByid(i);
+                _session.Tables.TestDocTable.FindByid(i);
             }
         }
 

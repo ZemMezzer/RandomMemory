@@ -1,0 +1,88 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>13</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsRoslynComponent>true</IsRoslynComponent>
+		<AnalyzerLanguage>cs</AnalyzerLanguage>
+		<RootNamespace>RandomMemory</RootNamespace>
+
+		<!-- NuGet packaging including in RandomMemory -->
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Use 4.3.0 to support Unity -->
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0" />
+		<PackageReference Include="PolySharp" Version="1.15.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="GeneratorCore\DatabaseBuilderTemplate.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>DatabaseBuilderTemplate.cs</LastGenOutput>
+		</None>
+		<None Update="GeneratorCore\TransactionTemplate.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>TransactionTemplate.cs</LastGenOutput>
+		</None>
+		<None Update="GeneratorCore\MemoryDatabaseTemplate.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>MemoryDatabaseTemplate.cs</LastGenOutput>
+		</None>
+		<None Update="GeneratorCore\MessagePackResolverTemplate.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>MessagePackResolverTemplate.cs</LastGenOutput>
+		</None>
+		<None Update="GeneratorCore\TableTemplate.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<LastGenOutput>TableTemplate.cs</LastGenOutput>
+		</None>
+    <None Update="GeneratorCore\DatabaseSessionTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>DatabaseSessionTemplate.cs</LastGenOutput>
+    </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="GeneratorCore\DatabaseBuilderTemplate.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>DatabaseBuilderTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\MemoryDatabaseTemplate.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>MemoryDatabaseTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\MessagePackResolverTemplate.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>MessagePackResolverTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\TableTemplate.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>TableTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\DatabaseSessionTemplate.cs">
+		  <AutoGen>True</AutoGen>
+		  <DesignTime>True</DesignTime>
+		  <DependentUpon>DatabaseSessionTemplate.tt</DependentUpon>
+		</Compile>
+		<Compile Update="GeneratorCore\TransactionTemplate.cs">
+		  <AutoGen>True</AutoGen>
+		  <DesignTime>True</DesignTime>
+		  <DependentUpon>TransactionTemplate.tt</DependentUpon>
+		</Compile>
+	</ItemGroup>
+</Project>

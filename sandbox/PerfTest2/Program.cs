@@ -17,6 +17,7 @@ namespace TestPerfLiteDB
     {
         static void Main(string[] args)
         {
+            RunTest("RandomMemory", new MasterMemory_Test(5000));
             RunTest("LiteDB: default", new LiteDB_Test(5000, null, new LiteDB.FileOptions { Journal = true, FileMode = LiteDB.FileMode.Shared }));
             RunTest("LiteDB: encrypted", new LiteDB_Test(5000, "mypass", new LiteDB.FileOptions { Journal = true, FileMode = LiteDB.FileMode.Shared }));
             RunTest("LiteDB: exclusive no journal", new LiteDB_Test(5000, null, new LiteDB.FileOptions { Journal = false, FileMode = LiteDB.FileMode.Exclusive }));
@@ -32,8 +33,6 @@ namespace TestPerfLiteDB
             RunTest("Dictionary", new Dictionary_Test(5000));
             RunTest("ConcurrentDictionary", new ConcurrentDictionary_Test(5000));
             RunTest("ImmutableDictionary", new ImmutableDictionary_Test(5000));
-
-            RunTest("MasterMemory", new MasterMemory_Test(5000));
 
             Console.ReadKey();
 

@@ -45,7 +45,7 @@ namespace Benchmark
             var baseConfig = Job.ShortRun.WithIterationCount(1).WithWarmupCount(1);
 
             // Add(baseConfig.With(Runtime.Clr).With(Jit.RyuJit).With(Platform.X64));
-            Add(baseConfig.With(Runtime.Core).With(Jit.RyuJit).With(Platform.X64));
+            Add(baseConfig.With(CoreRuntime.Core60).With(Jit.RyuJit).With(Platform.X64));
             // Add(baseConfig.With(InProcessEmitToolchain.Instance));
 
             Add(MarkdownExporter.GitHub);
@@ -57,7 +57,7 @@ namespace Benchmark
     [Config(typeof(BenchmarkConfig))]
     public class SimpleRun
     {
-        MemoryDatabase db;
+        DatabaseSession db;
         SQLite_Test sqliteMemory;
         SQLite_Test sqliteFile;
 
@@ -73,10 +73,13 @@ namespace Benchmark
 
         const int QueryId = 741;
 
+        int[] ids;
+
         public SimpleRun()
         {
             var bin = new DatabaseBuilder().Append(MakeDoc(5000)).Build();
-            db = new MemoryDatabase(bin);
+            db = new DatabaseSession(bin);
+            ids = db.Tables.TestDocTable.All.Select(t => t.id).ToArray();
 
             sqliteMemory = new SQLite_Test(5000, null, false, true);
             sqliteMemory.Prepare(); sqliteMemory.Insert(); sqliteMemory.CreateIndex();
@@ -135,9 +138,9 @@ namespace Benchmark
         }
 
         [Benchmark(Baseline = true)]
-        public TestDoc MasterMemoryQuery()
+        public TestDoc RandomMemoryQuery()
         {
-            return db.TestDocTable.FindByid(QueryId);
+            return db.Tables.TestDocTable.FindByid(QueryId);
         }
 
         [Benchmark]
@@ -160,54 +163,79 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public TestDoc SQLiteFileQuery()
+        public void RandomMemoryManyRequest()
         {
-            using (var cmd = new SQLiteCommand("SELECT * FROM col WHERE id = @id", sqliteFile._db))
+            for (var i = 0; i < ids.Length; i++)
             {
-                cmd.Parameters.Add(new SQLiteParameter("id", DbType.Int32));
-                cmd.Parameters["id"].Value = QueryId;
-
-                using (var r = cmd.ExecuteReader())
-                {
-                    r.Read();
-                    var id = r.GetInt32(0);
-                    var name = r.GetString(1);
-                    var lorem = r.GetString(2);
-                    return new TestDoc { id = 1, name = name, lorem = lorem };
-                }
+                var id = ids[i];
+                var transaction = db.BeginTransaction();
+                transaction.Diff(new TestDoc(id, "some name", "lorem"));
+                db.Commit();
             }
         }
 
-
-
         [Benchmark]
-        public BsonDocument LiteDbDefaultQuery()
+        public void SQLiteInMemoryManyRequest()
         {
-            return defaultLiteDb._db.FindOne("col", LiteDB.Query.EQ("_id", QueryId));
+            for (var i = 0; i < ids.Length; i++)
+            {
+                using var transaction = sqliteMemory._db.BeginTransaction();
+
+                using var cmd = new SQLiteCommand(
+                    "INSERT OR REPLACE INTO col (id, name, lorem) VALUES (@id, @name, @lorem)",
+                    sqliteMemory._db,
+                    transaction);
+
+                cmd.Parameters.Add("@id", DbType.Int32).Value = ids[i];
+                cmd.Parameters.Add("@name", DbType.String).Value = "some name";
+                cmd.Parameters.Add("@lorem", DbType.String).Value = "lorem";
+
+                cmd.ExecuteNonQuery();
+
+                transaction.Commit();
+            }
         }
 
         [Benchmark]
-        public BsonDocument LiteDbInMemoryQuery()
+        public void RandomMemorySingleRequest()
         {
-            return inmemoryLiteDb._db.FindOne("col", LiteDB.Query.EQ("_id", QueryId));
+            var transaction = db.BeginTransaction();
+
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                transaction.Diff(new TestDoc(id, "some name", "lorem"));
+            }
+
+            db.Commit();
         }
 
         [Benchmark]
-        public object LocalMemcachedQuery()
+        public void SQLiteInMemorySingleRequest()
         {
-            return localMemcached.Get("testdoc2." + QueryId);
-        }
+            using var transaction = sqliteMemory._db.BeginTransaction();
 
-        //[Benchmark]
-        //public TestDoc DictionaryQuery()
-        //{
-        //    return dictionary.TryGetValue(QueryId, out var r) ? r : null;
-        //}
+            using var cmd = new SQLiteCommand(
+                "INSERT OR REPLACE INTO col (id, name, lorem) VALUES (@id, @name, @lorem)",
+                sqliteMemory._db,
+                transaction);
 
-        [Benchmark]
-        public TestDoc RocksDbQuery()
-        {
-            return MessagePackSerializer.Deserialize<TestDoc>(rocksDb.Get(Encoding.UTF8.GetBytes("testdata." + QueryId)));
+            var idParam = cmd.Parameters.Add("@id", DbType.Int32);
+            var nameParam = cmd.Parameters.Add("@name", DbType.String);
+            var loremParam = cmd.Parameters.Add("@lorem", DbType.String);
+
+            for (var i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+
+                idParam.Value = id;
+                nameParam.Value = "some name";
+                loremParam.Value = "lorem";
+
+                cmd.ExecuteNonQuery();
+            }
+
+            transaction.Commit();
         }
     }
 
