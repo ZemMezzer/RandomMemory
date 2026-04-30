@@ -1,6 +1,6 @@
 using MessagePack;
 
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests.TestStructures
 {
     [MemoryTable("UserLevel"), MessagePackObject(true)]
     public class UserLevel

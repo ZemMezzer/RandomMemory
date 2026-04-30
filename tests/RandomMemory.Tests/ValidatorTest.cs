@@ -1,12 +1,8 @@
-﻿using MasterMemory.Tests.TestStructures;
+﻿using System.Linq;
 using MessagePack;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using System.Linq;
+using RandomMemory.Tests.TestStructures;
 
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests
 {
     public class ValidatorTest
     {
@@ -22,7 +18,7 @@ namespace MasterMemory.Tests
         public ValidatorTest(Xunit.Abstractions.ITestOutputHelper output)
         {
             this.output = output;
-            MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(MessagePackResolver.Instance);
+            MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(RandomMemory.Tests.MessagePackResolver.Instance);
         }
 #endif
 
@@ -270,10 +266,10 @@ namespace MasterMemory.Tests
             output.WriteLine(validateResult.FormatFailedResults());
             validateResult.IsValidationFailed.ShouldBeTrue();
 
-            var results = validateResult.FailedResults.Select(x => x.Message).Where(x => x.Contains("ValidateAction faile")).ToArray();
+            var results = validateResult.FailedResults.Select(x => x.Message).Where(x => x.Contains("ValidateAction failed")).ToArray();
 
             results[0].ShouldBe("ValidateAction failed: >= -90!!!, PK(QuestId) = 1");
-            results[1].ShouldBe("ValidateAction failed: (value(MasterMemory.Tests.TestStructures.QuestMaster).Cost <= 1000), PK(QuestId) = 4");
+            results[1].ShouldBe("ValidateAction failed: (value(RandomMemory.Tests.TestStructures.QuestMaster).Cost <= 1000), PK(QuestId) = 4");
         }
 
         [Fact]

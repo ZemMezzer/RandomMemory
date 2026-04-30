@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomMemory", "src\RandomM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomMemory.SourceGenerator", "src\RandomMemory.SourceGenerator\RandomMemory.SourceGenerator.csproj", "{F6DB1D63-1817-4B79-A76A-580ABF1D8374}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomMemory.Tests", "tests\RandomMemory.Tests\RandomMemory.Tests.csproj", "{EC3E4B4B-5016-4F37-B34E-E7B474B37802}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomMemory.SourceGenerator.Tests", "tests\RandomMemory.SourceGenerator.Tests\RandomMemory.SourceGenerator.Tests.csproj", "{C8710458-E19B-4C3E-9C05-78F47739F1FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{F6DB1D63-1817-4B79-A76A-580ABF1D8374}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6DB1D63-1817-4B79-A76A-580ABF1D8374}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6DB1D63-1817-4B79-A76A-580ABF1D8374}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC3E4B4B-5016-4F37-B34E-E7B474B37802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3E4B4B-5016-4F37-B34E-E7B474B37802}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC3E4B4B-5016-4F37-B34E-E7B474B37802}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3E4B4B-5016-4F37-B34E-E7B474B37802}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8710458-E19B-4C3E-9C05-78F47739F1FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8710458-E19B-4C3E-9C05-78F47739F1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8710458-E19B-4C3E-9C05-78F47739F1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8710458-E19B-4C3E-9C05-78F47739F1FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +44,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2648877C-862D-4A05-B30B-73FBC1958BFE} = {60662102-4523-441E-8D6C-D87A3246C648}
 		{F6DB1D63-1817-4B79-A76A-580ABF1D8374} = {60662102-4523-441E-8D6C-D87A3246C648}
+		{EC3E4B4B-5016-4F37-B34E-E7B474B37802} = {BDAFF1CB-8E53-412B-B389-42A15343C7A3}
+		{C8710458-E19B-4C3E-9C05-78F47739F1FF} = {BDAFF1CB-8E53-412B-B389-42A15343C7A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0121A3C4-6AE0-4622-BE04-05D9A3E729AC}

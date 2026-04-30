@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
-
-namespace MasterMemory.SourceGenerator.Tests;
+﻿
+namespace RandomMemory.SourceGenerator.Tests;
 
 public class GenerateTest(ITestOutputHelper outputHelper) : TestBase(outputHelper)
 {

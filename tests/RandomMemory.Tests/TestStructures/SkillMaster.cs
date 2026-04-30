@@ -1,7 +1,7 @@
 ﻿#pragma warning disable
 using MessagePack;
 
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests.TestStructures
 {
     [MemoryTable("skillmaster"), MessagePackObject(true)]
     public class SkillMaster

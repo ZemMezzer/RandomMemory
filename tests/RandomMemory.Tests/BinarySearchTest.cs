@@ -1,14 +1,10 @@
-﻿using MasterMemory.Internal;
-using MessagePack.Resolvers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 using MessagePack;
+using RandomMemory.Internal;
 
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests
 {
     public class BinarySearchTest
     {
@@ -99,7 +95,7 @@ namespace MasterMemory.Tests
             source[BinarySearch.FindClosest(source, 0, source.Length, 1001, x => x.bound, Comparer<int>.Default, true)].id.ShouldBe(5);
             source[BinarySearch.FindClosest(source, 0, source.Length, 10000, x => x.bound, Comparer<int>.Default, true)].id.ShouldBe(5);
 //          source[BinarySearch.FindClosest(source, 0, source.Length, 10000, x => x.bound, Comparer<int>.Default, false)].id.ShouldBe(5);
- 
+
             BinarySearch.FindClosest(source, 0, source.Length, 10000, x => x.bound, Comparer<int>.Default, false).ShouldBe(6);
         }
     }

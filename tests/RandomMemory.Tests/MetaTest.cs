@@ -1,10 +1,5 @@
 ﻿#pragma warning disable
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests
 {
     public class MetaTest
     {

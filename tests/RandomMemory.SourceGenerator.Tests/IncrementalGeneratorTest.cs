@@ -1,4 +1,6 @@
-﻿namespace MasterMemory.SourceGenerator.Tests;
+﻿using RandomMemory.SourceGenerator.Tests.Utility;
+
+namespace RandomMemory.SourceGenerator.Tests;
 
 public class IncrementalGeneratorTest
 {
@@ -45,7 +47,7 @@ public class Item
 }
 """;
 
-        var reasons = CSharpGeneratorRunner.GetIncrementalGeneratorTrackedStepsReasons("MasterMemory.SyntaxProvider.", step1, step2, step3);
+        var reasons = CSharpGeneratorRunner.GetIncrementalGeneratorTrackedStepsReasons("RandomMemory.SyntaxProvider.", step1, step2, step3);
 
         VerifySourceOutputReasonIsCached(reasons[1]);
         VerifySourceOutputReasonIsNotCached(reasons[2]);

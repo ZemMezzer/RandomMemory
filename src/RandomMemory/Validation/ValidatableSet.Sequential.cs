@@ -1,8 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using RandomMemory.Validation;
 
 namespace RandomMemory.Validation
 {
@@ -35,7 +33,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -69,7 +67,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -103,7 +101,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -137,7 +135,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -171,7 +169,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -205,7 +203,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -239,7 +237,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;
@@ -273,7 +271,7 @@ namespace RandomMemory.Validation
 
                 if ((prev + 1) != curr)
                 {
-                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]!);
+                    resultSet.AddFail(typeof(TElement), "Sequential failed:" + message() + ", value = " + (prev, curr) + ", " + BuildPkMessage(data[i]), data[i]);
                 }
 
                 prev = curr;

@@ -1,11 +1,11 @@
 ﻿#pragma warning disable
-using Xunit;
-using System.Linq;
-using MasterMemory.Tests.Tables;
-using MessagePack;
 using System.Collections.Generic;
+using System.Linq;
+using MessagePack;
+using RandomMemory.Tests.Tables;
+using RandomMemory.Tests.TestStructures;
 
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests
 {
     public class MemoryKeyMemoryTest
     {

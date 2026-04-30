@@ -1,10 +1,10 @@
-﻿using MasterMemory.Tests.Tables;
-using MessagePack;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Xunit;
+using MessagePack;
+using RandomMemory.Tests.Tables;
+using RandomMemory.Tests.TestStructures;
 
-namespace MasterMemory.Tests
+namespace RandomMemory.Tests
 {
     public class MemoryTest
     {
@@ -59,7 +59,10 @@ namespace MasterMemory.Tests
                 item.Id.ShouldBe(f.Id);
             }
 
-            Assert.Throws<KeyNotFoundException>(() => table.FindById(110));
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
+                table.FindById(110);
+            });
             table.TryFindById(110, out _).ShouldBeFalse();
         }
 

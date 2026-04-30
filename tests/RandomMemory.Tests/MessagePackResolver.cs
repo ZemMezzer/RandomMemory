@@ -1,7 +1,7 @@
 ﻿using MessagePack;
 using MessagePack.Resolvers;
 
-namespace MasterMemory.Tests;
+namespace RandomMemory.Tests;
 
-[CompositeResolver(typeof(MasterMemoryResolver), typeof(StandardResolver))]
+[CompositeResolver(typeof(RandomMemoryResolver), typeof(StandardResolver))]
 public partial class MessagePackResolver;

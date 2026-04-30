@@ -1,4 +1,4 @@
-﻿namespace MasterMemory.SourceGenerator.Tests;
+﻿namespace RandomMemory.SourceGenerator.Tests;
 
 public class AssemblyAtrributeTest(ITestOutputHelper outputHelper) : TestBase(outputHelper)
 {
@@ -14,12 +14,12 @@ public class Item
 }
 """);
 
-        codes.TryGetValue("MasterMemory.DatabaseBuilder.g.cs", out _).ShouldBeTrue();
+        codes.TryGetValue("RandomMemory.DatabaseBuilder.g.cs", out _).ShouldBeTrue();
 
-        var mainCode = codes["MasterMemory.ItemTable.g.cs"];
+        var mainCode = codes["RandomMemory.ItemTable.g.cs"];
         WriteLine(mainCode);
 
-        mainCode.ShouldContain("namespace MasterMemory.Tables");
+        mainCode.ShouldContain("namespace RandomMemory.Tables");
         mainCode.ShouldContain("return ThrowKeyNotFound(key);");
         mainCode.ShouldContain("public sealed partial class ItemTable");
     }
@@ -29,7 +29,7 @@ public class Item
     public void FullOptions()
     {
         var codes = Helper.GenerateCode("""
-[assembly: MasterMemoryGeneratorOptions(
+[assembly: RandomMemoryGeneratorOptions(
     Namespace = "MyNamespace",
     IsReturnNullIfKeyNotFound = true,
     PrefixClassName = "FooBarBaz")]
@@ -42,9 +42,9 @@ public class Item
 }
 """);
 
-        codes.TryGetValue("MasterMemory.FooBarBazDatabaseBuilder.g.cs", out _).ShouldBeTrue();
+        codes.TryGetValue("RandomMemory.FooBarBazDatabaseBuilder.g.cs", out _).ShouldBeTrue();
 
-        var mainCode = codes["MasterMemory.ItemTable.g.cs"];
+        var mainCode = codes["RandomMemory.ItemTable.g.cs"];
         WriteLine(mainCode);
 
         mainCode.ShouldContain("namespace MyNamespace.Tables");

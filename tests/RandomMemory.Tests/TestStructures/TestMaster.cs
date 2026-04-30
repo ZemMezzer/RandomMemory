@@ -1,9 +1,6 @@
 using MessagePack;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MasterMemory.Tests.TestStructures
+namespace RandomMemory.Tests.TestStructures
 {
     [MessagePackObject(true)]
     [MemoryTable(nameof(TestMaster))]

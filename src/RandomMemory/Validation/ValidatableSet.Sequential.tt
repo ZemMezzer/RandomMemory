@@ -6,7 +6,7 @@
 <#@ import namespace="System.Diagnostics" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Collections" #>
-<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="System.Collections.Generic" #>
 <#
     var targetTypes = new[]
     {
@@ -24,7 +24,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace MasterMemory.Validation
+namespace RandomMemory.Validation
 {
     public partial class ValidatableSet<TElement>
     {

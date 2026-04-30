@@ -1,6 +1,8 @@
-﻿using Microsoft.CodeAnalysis;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
+
+namespace RandomMemory.SourceGenerator.Tests.Utility;
 
 public class CodeGeneratorHelper(ITestOutputHelper output, string idPrefix)
 {

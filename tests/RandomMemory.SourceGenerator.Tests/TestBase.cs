@@ -1,4 +1,6 @@
-﻿namespace MasterMemory.SourceGenerator.Tests;
+﻿using RandomMemory.SourceGenerator.Tests.Utility;
+
+namespace RandomMemory.SourceGenerator.Tests;
 
 public abstract class TestBase(ITestOutputHelper testoutputHelper)
 {

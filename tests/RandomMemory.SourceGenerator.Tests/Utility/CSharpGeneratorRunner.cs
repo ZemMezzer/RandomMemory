@@ -1,11 +1,12 @@
-﻿using MasterMemory.SourceGenerator;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace RandomMemory.SourceGenerator.Tests.Utility;
 
 public static class CSharpGeneratorRunner
 {
@@ -16,12 +17,12 @@ public static class CSharpGeneratorRunner
     {
         // Add project namespace.
         var globalUsings = """
-global using System;
-global using System.Threading;
-global using System.Threading.Tasks;
-global using System.ComponentModel.DataAnnotations;
-global using MasterMemory;
-""";
+                           global using System;
+                           global using System.Threading;
+                           global using System.Threading.Tasks;
+                           global using System.ComponentModel.DataAnnotations;
+                           global using RandomMemory;
+                           """;
 
         var references = AppDomain.CurrentDomain.GetAssemblies()
             .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
@@ -37,8 +38,7 @@ global using MasterMemory;
 
         static IEnumerable<MetadataReference> GetSelfReferences()
         {
-            // MasterMemory.Annotations
-            yield return MetadataReference.CreateFromFile(typeof(MasterMemory.MemoryTableAttribute).Assembly.Location);
+            yield return MetadataReference.CreateFromFile(typeof(MemoryTableAttribute).Assembly.Location);
         }
     }
 
@@ -51,7 +51,7 @@ global using MasterMemory;
         var parseOptions = new CSharpParseOptions(LanguageVersion.CSharp12, preprocessorSymbols: preprocessorSymbols); // 12
 
         // Create SourceGenerator
-        var driver = CSharpGeneratorDriver.Create(new MasterMemoryGenerator()).WithUpdatedParseOptions(parseOptions);
+        var driver = CSharpGeneratorDriver.Create(new RandomMemoryGenerator()).WithUpdatedParseOptions(parseOptions);
         if (options != null)
         {
             driver = (Microsoft.CodeAnalysis.CSharp.CSharpGeneratorDriver)driver.WithUpdatedAnalyzerConfigOptions(options);
@@ -102,8 +102,8 @@ global using MasterMemory;
     {
         var parseOptions = new CSharpParseOptions(LanguageVersion.CSharp12); // 12
         var driver = CSharpGeneratorDriver.Create(
-            [new MasterMemoryGenerator().AsSourceGenerator()],
-            driverOptions: new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, trackIncrementalGeneratorSteps: true))
+                [new RandomMemoryGenerator().AsSourceGenerator()],
+                driverOptions: new GeneratorDriverOptions(IncrementalGeneratorOutputKind.None, trackIncrementalGeneratorSteps: true))
             .WithUpdatedParseOptions(parseOptions);
 
         var generatorResults = sources
