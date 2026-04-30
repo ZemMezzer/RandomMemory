@@ -1,4 +1,4 @@
-[![Tests](https://github.com/ZemMezzer/RandomMemory/actions/workflows/test.yml/badge.svg)](https://github.com/ZemMezzer/RandomMemory/actions/workflows/test.yml)
+[![Tests](https://github.com/ZemMezzer/RandomMemory/workflows/Tests/badge.svg)](https://github.com/ZemMezzer/RandomMemory/actions) [![Releases](https://img.shields.io/github/release/ZemMezzer/RandomMemory.svg)](https://github.com/ZemMezzer/RandomMemory/releases)
 
 # RandomMemory
 
