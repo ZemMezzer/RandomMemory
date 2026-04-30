@@ -1,3 +1,5 @@
+[![Tests](https://github.com/ZemMezzer/RandomMemory/actions/workflows/test.yml/badge.svg)](https://github.com/ZemMezzer/RandomMemory/actions/workflows/test.yml)
+
 # RandomMemory
 
 Source Generator based embedded typed readonly in-memory document database for .NET.
