@@ -223,6 +223,6 @@ var session = new DatabaseSession(bytes, maxDegreeOfParallelism: Environment.Pro
 Strip validator and metadata from release builds by defining:
 
 ```
-DISABLE_MASTERMEMORY_VALIDATOR
-DISABLE_MASTERMEMORY_METADATABASE
+DISABLE_RANDOMMEMORY_VALIDATOR
+DISABLE_RANDOMMEMORY_METADATABASE
 ```
