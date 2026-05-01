@@ -28,7 +28,7 @@ namespace <#= Namespace #>
 <# } #>
         }
 
-        public <#= ClassName #>(byte[] databaseBinary, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
+        public <#= ClassName #>(IChangesBridge bridge, byte[] databaseBinary, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
             : base(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism)
         {
         }

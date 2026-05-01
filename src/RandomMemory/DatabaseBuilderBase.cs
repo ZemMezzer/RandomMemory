@@ -13,8 +13,8 @@ namespace RandomMemory
         readonly ByteBufferWriter bufferWriter = new ByteBufferWriter();
 
         // TableName, (Offset, Count)
-        readonly Dictionary<string, (int offset, int count)> header = new Dictionary<string, (int offset, int count)>();
-        readonly MessagePackSerializerOptions? options;
+        private readonly Dictionary<string, (int offset, int count)> _header = new Dictionary<string, (int offset, int count)>();
+        private readonly MessagePackSerializerOptions? _options;
 
         public DatabaseBuilderBase(MessagePackSerializerOptions? options)
         {
@@ -29,7 +29,7 @@ namespace RandomMemory
         {
             if (resolver != null)
             {
-                this.options = MessagePackSerializer.DefaultOptions
+                this._options = MessagePackSerializer.DefaultOptions
                     .WithCompression(MessagePackCompression.Lz4Block)
                     .WithResolver(resolver);
             }
@@ -41,7 +41,7 @@ namespace RandomMemory
             var tableName = typeof(T).GetCustomAttribute<MemoryTableAttribute>();
             if (tableName == null) throw new InvalidOperationException("Type is not annotated MemoryTableAttribute. Type:" + typeof(T).FullName);
 
-            if (header.ContainsKey(tableName.TableName))
+            if (_header.ContainsKey(tableName.TableName))
             {
                 throw new InvalidOperationException("TableName is already appended in builder. TableName: " + tableName.TableName + " Type:" + typeof(T).FullName);
             }
@@ -52,12 +52,12 @@ namespace RandomMemory
             var source = FastSort(datasource, indexSelector, comparer);
 
             // write data and store header-data.
-            var useOption = options ?? MessagePackSerializer.DefaultOptions.WithCompression(MessagePackCompression.Lz4Block);
+            var useOption = _options ?? MessagePackSerializer.DefaultOptions.WithCompression(MessagePackCompression.Lz4Block);
 
             var offset = bufferWriter.CurrentOffset;
             MessagePackSerializer.Serialize(bufferWriter, source, useOption);
 
-            header.Add(tableName.TableName, (offset, bufferWriter.CurrentOffset - offset));
+            _header.Add(tableName.TableName, (offset, bufferWriter.CurrentOffset - offset));
         }
 
         static TElement[] FastSort<TElement, TKey>(IEnumerable<TElement> datasource, Func<TElement, TKey> indexSelector, IComparer<TKey> comparer)
@@ -105,7 +105,7 @@ namespace RandomMemory
 
         public void WriteToStream(Stream stream)
         {
-            MessagePackSerializer.Serialize(stream, header, HeaderFormatterResolver.StandardOptions);
+            MessagePackSerializer.Serialize(stream, _header, HeaderFormatterResolver.StandardOptions);
             MemoryMarshal.TryGetArray(bufferWriter.WrittenMemory, out var segment);
             stream.Write(segment.Array, segment.Offset, segment.Count);
         }

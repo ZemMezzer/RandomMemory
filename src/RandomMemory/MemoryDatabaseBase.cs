@@ -11,15 +11,38 @@ namespace RandomMemory
 {
     public abstract class MemoryDatabaseBase
     {
+        private class NullBridge : IChangesBridge
+        {
+            private class NullObservable<T> : IObservable<T>, IDisposable
+            {
+                public IDisposable Subscribe(IObserver<T> observer)
+                {
+                    return this;
+                }
+
+                public void Dispose() {}
+            }
+            public IObservable<TTable> OnChange<TTable>() => new NullObservable<TTable>();
+            public void EnqueueChange<TTable>(TTable table) {}
+            public void Publish() {}
+            public void Clear() {}
+            public void Dispose() {}
+        }
+
+        private readonly IChangesBridge _bridge;
+        public IObservable<TTable> OnChange<TTable>() => _bridge.OnChange<TTable>();
+
         protected MemoryDatabaseBase()
         {
 
         }
 
-        public MemoryDatabaseBase(byte[]? databaseBinary = null, bool internString = true, IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
+        public MemoryDatabaseBase(IChangesBridge? bridge, byte[]? databaseBinary = null, bool internString = true, IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
         {
             var reader = new MessagePackReader(databaseBinary);
             var formatter = new DictionaryFormatter<string, (int, int)>();
+
+            _bridge = bridge ?? new NullBridge();
 
             if (maxDegreeOfParallelism < 1)
             {
@@ -39,6 +62,7 @@ namespace RandomMemory
                     Array.Empty<byte>().AsMemory(),
                     MessagePackSerializer.DefaultOptions.WithResolver(resolver).WithCompression(MessagePackCompression.Lz4Block),
                     maxDegreeOfParallelism);
+                _bridge.Publish();
                 return;
             }
 
@@ -48,6 +72,7 @@ namespace RandomMemory
                 databaseBinary.AsMemory((int)reader.Consumed),
                 MessagePackSerializer.DefaultOptions.WithResolver(resolver).WithCompression(MessagePackCompression.Lz4Block),
                 maxDegreeOfParallelism);
+            _bridge.Publish();
         }
 
         protected static TView ExtractTableData<T, TView>(Dictionary<string, (int offset, int count)> header, ReadOnlyMemory<byte> databaseBinary, MessagePackSerializerOptions options, Func<T[], TView> createView)

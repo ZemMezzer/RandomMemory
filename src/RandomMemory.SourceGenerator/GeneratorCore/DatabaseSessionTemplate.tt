@@ -15,13 +15,15 @@ namespace <#= Namespace #>
    {
         private <#= PrefixClassName #>MemoryDatabase _database;
         private <#= PrefixClassName #>Transaction? _transaction;
+        private readonly IChangesBridge _changesBridge;
 
         public bool IsTransactionStarted => _transaction != null;
         public <#= PrefixClassName #>MemoryDatabase Tables => _database;
 
-        public <#= ClassName #>(byte[]? databaseBinary = null, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
+        public <#= ClassName #>(IChangesBridge changesBridge, byte[]? databaseBinary = null, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)
         {
-            _database = new <#= PrefixClassName #>MemoryDatabase(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);
+            _changesBridge = bridge;
+            _database = new <#= PrefixClassName #>MemoryDatabase(changesBridge, databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);
         }
 
         public ITransaction BeginTransaction()

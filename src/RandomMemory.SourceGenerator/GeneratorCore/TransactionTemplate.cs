@@ -99,7 +99,7 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write("MemoryDatabase _database;\r\n");
+            this.Write("MemoryDatabase _database;\r\n        private readonly IChangesBridge _changesBridge;\r\n");
  foreach(var item in GenerationContexts) { 
             this.Write("        private List<");
             
@@ -121,13 +121,13 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write("(");
+            this.Write("(IChangesBridge changesBridge, ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             
             #line default
             #line hidden
-            this.Write("MemoryDatabase database)\r\n        {\r\n            _database = database;\r\n\r\n");
+            this.Write("MemoryDatabase database)\r\n        {\r\n            _database = database;\r\n            _changesBridge = _changesBridge;\r\n\r\n");
  foreach(var item in GenerationContexts) { 
             this.Write("            _");
             
@@ -155,7 +155,7 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write("MemoryDatabase(\r\n");
+            this.Write("MemoryDatabase(_changesBridge,\r\n");
  for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; 
             this.Write("                new ");
             

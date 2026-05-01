@@ -30,13 +30,15 @@ namespace <#= Namespace #>
    public sealed class <#= ClassName #> : TransactionBase, ITransaction
    {
         private <#= PrefixClassName #>MemoryDatabase _database;
+        private readonly IChangesBridge _changesBridge;
 <# foreach(var item in GenerationContexts) { #>
         private List<<#= item.ClassName #>> _<#= item.ClassName #>RawTable { get; set; } = default!;
 <# } #>
 
-        public <#= ClassName #>(<#= PrefixClassName #>MemoryDatabase database)
+        public <#= ClassName #>(IChangesBridge changesBridge, <#= PrefixClassName #>MemoryDatabase database)
         {
             _database = database;
+            _changesBridge = _changesBridge;
 
 <# foreach(var item in GenerationContexts) { #>
             _<#= item.ClassName #>RawTable = _database.<#= item.ClassName #>Table.GetRawDataUnsafe().ToList();
@@ -45,7 +47,7 @@ namespace <#= Namespace #>
 
         public <#= PrefixClassName #>MemoryDatabase Commit()
         {
-            _database = new <#= PrefixClassName #>MemoryDatabase(
+            _database = new <#= PrefixClassName #>MemoryDatabase(_changesBridge,
 <# for(var i = 0; i < GenerationContexts.Length; i++) { var item = GenerationContexts[i]; #>
                 new <#= item.ClassName #>Table(_<#= item.ClassName #>RawTable.ToArray())<#= (i == GenerationContexts.Length - 1) ? "" : "," #>
 <# } #>

@@ -55,7 +55,7 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write("Transaction? _transaction;\r\n\r\n        public bool IsTransactionStarted => _transaction != null;\r\n        public ");
+            this.Write("Transaction? _transaction;\r\n        private readonly IChangesBridge _changesBridge;\r\n\r\n        public bool IsTransactionStarted => _transaction != null;\r\n        public ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             
@@ -67,13 +67,13 @@ namespace RandomMemory.GeneratorCore
             
             #line default
             #line hidden
-            this.Write("(byte[]? databaseBinary = null, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)\r\n        {\r\n            _database = new ");
+            this.Write("(IChangesBridge changesBridge, byte[]? databaseBinary = null, bool internString = true, MessagePack.IFormatterResolver? formatterResolver = null, int maxDegreeOfParallelism = 1)\r\n        {\r\n            _changesBridge = bridge;\r\n            _database = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             
             #line default
             #line hidden
-            this.Write("MemoryDatabase(databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);\r\n        }\r\n\r\n        public ITransaction BeginTransaction()\r\n        {\r\n            if(IsTransactionStarted)\r\n              throw new System.InvalidOperationException(\"Transaction already started!\");\r\n\r\n            _transaction = new ");
+            this.Write("MemoryDatabase(changesBridge, databaseBinary, internString, formatterResolver, maxDegreeOfParallelism);\r\n        }\r\n\r\n        public ITransaction BeginTransaction()\r\n        {\r\n            if(IsTransactionStarted)\r\n              throw new System.InvalidOperationException(\"Transaction already started!\");\r\n\r\n            _transaction = new ");
             
             this.Write(this.ToStringHelper.ToStringWithCulture(PrefixClassName));
             
